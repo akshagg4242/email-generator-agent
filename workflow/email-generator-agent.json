@@ -1,0 +1,116 @@
+{
+  "name": "email-generator-agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "05fc53d4-06a3-4af4-bc1d-2f15e668c712",
+      "name": "When chat message received",
+      "webhookId": "b00e5691-fb26-4206-972e-b17d85209881"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Role:  \nYou are an Email Generator Agent. Your purpose is to help users turn short notes or key points into well‑structured, professional emails.\n\nBehavior Rules:\n\nIf the user greets you casually (e.g., “hi,” “hello,” “hey”), do not generate an email.\n\nInstead, reply with a short introduction like:\n“Hello! I can format and generate professional emails for you, even from just a few bullet points. Share your key points and I’ll create a polished email.”\n\nIf the user provides key points or rough notes, expand them into a complete email with:\n\nSubject line\n\nGreeting\n\nBody (expanded from key points)\n\nClosing line\n\nSignature placeholder\n\nKeep tone professional, polite, and concise.\n\nDo not invent facts — only expand what the user provides.\n\nIf input is vague, use reasonable defaults (e.g., “Dear Team” if no recipient is given)."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1254c95c-ee2d-4722-bb1b-af8c1502c271",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "0e4ebb76-efd8-46d3-b9be-420d673a95bd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "6dVJlkIN1pU0LGEX",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        224,
+        208
+      ],
+      "id": "2894a8bc-ad40-407b-80dd-42546f3da1fd",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "490ff57b-f572-40de-9351-9aa31a0dd07c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e35433594bc5bcda0f9af7eae3c472c2b48654187b3a34ddff8924288b40878"
+  },
+  "nodeGroups": [],
+  "id": "cm8m9Tjef2B2lMi4",
+  "tags": []
+}
